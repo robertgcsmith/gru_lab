@@ -214,6 +214,11 @@ def train_counting(
 def regression_metrics(prediction, target, rounded_accuracy=False):
     prediction = prediction.detach().double().reshape(-1)
     target = target.detach().to(prediction).reshape(-1)
+
+    # validation check: ensure that prediction and target have equal, non-zero sizes
+    if prediction.numel() != target.numel() or target.numel() == 0:
+        raise ValueError("Prediction and target must have equal, nonzero sizes.")
+
     error = prediction - target
     sst = (target - target.mean()).square().sum()
 
