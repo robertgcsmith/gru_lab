@@ -764,8 +764,7 @@ def check_jacobian(gru=None, x=None, h=None, epsilon=1e-6):
         )
 
     # Compare the ordered product against differentiation through two steps.
-    sequence = torch.stack([x,torch.zeros_like(x)]).unsqueeze(-1)  # shape (2, D, 1)
-    torch.tensor([1., 0.], dtype=torch.float64).reshape(2, 1, 1)
+    sequence = torch.stack((x, torch.zeros_like(x)), dim=0).unsqueeze(1)  # (2, 1, D)
     with torch.no_grad():
         diagnostics = dynamical_diagnostics(gru, sequence, steps=(0, 1), windows=((0, 2),))
     with torch.enable_grad():
